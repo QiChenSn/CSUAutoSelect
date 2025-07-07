@@ -108,6 +108,30 @@ class CourseSelector:
 		await self.client.get(CSUURLs.LOGIN_URL)  # 获取登录页面
 		return input("输入验证码：")
 	
+	async def check_login_success(self) -> bool:
+		"""检查是否登录成功，通过访问主页面并检查内容来判断"""
+		try:
+			# 访问主页面
+			response = await self.client.get(CSUURLs.MAIN_URL)
+			
+			# 检查响应内容，如果包含登录页面特征，说明登录失败
+			if '登录' in response.text and '用户名' in response.text:
+				return False
+			
+			# 检查是否包含学生主页面特征
+			if '学生' in response.text or 'xsMain' in response.text:
+				return True
+				
+			# 如果都不匹配，尝试访问其他页面来判断
+			test_response = await self.client.get(CSUURLs.COURSE_LIST_URL)
+			if '登录' in test_response.text:
+				return False
+				
+			return True
+		except Exception as e:
+			print(f"登录检测时发生错误: {e}")
+			return False
+
 	async def login(self, verify_code: str) -> bool:
 		"""登录系统"""
 		username_b64 = base64.b64encode(self.login_config.username.encode()).decode()
@@ -119,13 +143,14 @@ class CourseSelector:
 		}
 		
 		await self.client.post(CSUURLs.LOGIN_URL, data=data)
-		response = await self.client.get(CSUURLs.MAIN_URL)
-		if response.status_code != 200:
+		
+		# 使用新的登录检查逻辑
+		if await self.check_login_success():
+			print('成功登录教务系统')
+			return True
+		else:
 			print('学号或密码或验证码错误，请退出修改配置重启')
 			return False
-		
-		print('成功登录教务系统')
-		return True
 	
 	async def enter_course_selection(self) -> bool:
 		"""进入选课页面"""
