@@ -56,11 +56,30 @@ cp config_template.ini config.ini
 
 ## 运行
 
+### 自动选课
 ```bash
 python autoselect.py
 ```
 
 程序会自动使用异步模式运行，提供最佳的并发性能。
+
+### 课程查找
+```bash
+python course_finder.py
+```
+
+课程查找工具提供以下功能：
+- 查看所有课程信息
+- 按课程名称搜索
+- 按教师姓名搜索
+- 保存课程信息到JSON或CSV文件
+
+### 运行示例
+```bash
+python example_usage.py
+```
+
+查看课程查找工具的使用示例。
 
 ## 如何获取课程ID
 
@@ -82,7 +101,9 @@ python autoselect.py
 
 ```
 CSUAutoSelect/
-├── autoselect.py          # 主程序文件
+├── autoselect.py          # 主程序文件（自动选课）
+├── course_finder.py       # 课程查找工具
+├── example_usage.py       # 使用示例
 ├── config.ini            # 配置文件（需要创建）
 ├── config_template.ini   # 配置模板
 ├── requirements.txt      # 依赖列表
@@ -92,10 +113,15 @@ CSUAutoSelect/
 
 ### 核心类说明
 
+#### 自动选课模块 (autoselect.py)
 - `ConfigManager`: 配置管理器，负责读取和解析配置文件
 - `CourseSelector`: 选课器，使用异步并发进行选课
 - `CourseConfig`: 课程配置数据类
 - `LoginConfig`: 登录配置数据类
+
+#### 课程查找模块 (course_finder.py)
+- `CourseFinder`: 课程查找器，用于查询教师课程信息
+- `CourseInfo`: 课程信息数据类
 
 ## 使用示例
 
@@ -164,6 +190,14 @@ id_1 = 345678
 欢迎提交 Issue 和 Pull Request 来改进这个项目！
 
 ## 更新日志
+
+### V3.1
+- 新增课程查找工具 (course_finder.py)
+- 支持按课程名称和教师姓名搜索
+- 支持将课程信息保存为JSON和CSV格式
+- 添加使用示例文件 (example_usage.py)
+- 改进HTML解析逻辑，支持多种表格格式
+- 添加批量处理和统计分析功能
 
 ### V3.0
 - 重构代码结构，采用面向对象设计
